@@ -3,7 +3,7 @@
 import { z } from "zod";
 import { OctagonAlertIcon, X } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -13,7 +13,7 @@ import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { 
+import {
   Form,
   FormControl,
   FormField,
@@ -24,8 +24,8 @@ import {
 import { Alert, AlertTitle } from "@/components/ui/alert";
 
 const formSchema = z.object({
-  email: z.email({message: "Invalied email address"}),
-  password: z.string().min(1, {message: "Password is required"}),
+  email: z.email({ message: "Invalied email address" }),
+  password: z.string().min(1, { message: "Password is required" }),
 });
 
 export const SignInView = () => {
@@ -43,9 +43,9 @@ export const SignInView = () => {
       password: "",
     }
   });
-  
+
   const onSubmit = (data: z.infer<typeof formSchema>) => {
-      
+
     setError(null);
     setPending(true);
 
@@ -53,7 +53,7 @@ export const SignInView = () => {
       {
         email: data.email,
         password: data.password,
-      }, 
+      },
       {
         onSuccess: () => {
           setPending(false);
@@ -86,14 +86,14 @@ export const SignInView = () => {
                 </div>
 
                 <div className="grid gap-3">
-                  <FormField 
+                  <FormField
                     control={form.control}
                     name="email"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Email</FormLabel>
                         <FormControl>
-                          <Input 
+                          <Input
                             type="email"
                             placeholder="username@example.com"
                             {...field}
@@ -106,14 +106,14 @@ export const SignInView = () => {
                 </div>
 
                 <div className="grid gap-3">
-                  <FormField 
+                  <FormField
                     control={form.control}
                     name="password"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Password</FormLabel>
                         <FormControl>
-                          <Input 
+                          <Input
                             type="password"
                             placeholder="*******"
                             {...field}
@@ -147,7 +147,7 @@ export const SignInView = () => {
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
-                  <Button 
+                  <Button
                     variant="outline"
                     type="button"
                     className="w-full"
@@ -155,7 +155,14 @@ export const SignInView = () => {
                     Google
                   </Button>
 
-                  <Button 
+                  <Button
+                    disabled={pending}
+                    onClick={() => {
+                      authClient.signIn.social({
+                        provider: "github"
+                      });
+                      setPending(true);
+                    }}
                     variant="outline"
                     type="button"
                     className="w-full"
