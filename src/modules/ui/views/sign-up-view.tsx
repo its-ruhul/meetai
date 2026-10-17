@@ -25,12 +25,12 @@ import { Alert, AlertTitle } from "@/components/ui/alert";
 
 const formSchema = z.object({
   name: z.string().min(1, { message: "Name is required"}),
-  email: z.email({message: "Invalied email address"}),
-  password: z.string().min(1, {message: "Password is required"}),
+  email: z.email({message: "Invalid email address"}),
+  password: z.string().min(1, {message: "Password is required"}).min(8, {message: "Password is too short"}),
   confirmPassword: z.string().min(1, {message: "Password is required"}),
 }).refine((data) => data.password === data.confirmPassword, {
   message: "Passwords don't match",
-  path: ["cofirmPassword"],
+  path: ["confirmPassword"],
 });
 
 export const SignUpView = () => {
@@ -38,8 +38,6 @@ export const SignUpView = () => {
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
-
-  console.log("Sign in view");
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -223,7 +221,7 @@ export const SignUpView = () => {
           </Form>
 
           <div className="bg-radial from-green-700 to-green-900 relative hidden md:flex flex-col gap-y-4 items-center justify-center">
-            <img src="/logo.svg" alt="Image" className="h-23 w-23" />
+            <img src="/logo.svg" alt="meet.ai logo" className="h-23 w-23" />
             <p className="text-2xl font-semibold text-white">
               Meet.AI
             </p>
