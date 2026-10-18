@@ -25,7 +25,7 @@ import {
 import { Alert, AlertTitle } from "@/components/ui/alert";
 
 const formSchema = z.object({
-  email: z.email({ message: "Invalied email address" }),
+  email: z.email({ message: "Invalid email address" }),
   password: z.string().min(1, { message: "Password is required" }),
 });
 
@@ -180,8 +180,9 @@ export const SignInView = () => {
                     variant="outline"
                     type="button"
                     className="w-full"
+                    aria-label="Contnue with Google"
                   >
-                    <FaGoogle />
+                    <FaGoogle aria-hidden="true" />
                   </Button>
 
                   <Button
@@ -190,8 +191,9 @@ export const SignInView = () => {
                     variant="outline"
                     type="button"
                     className="w-full"
+                    aria-label="Continue with GitHub"
                   >
-                    <FaGithub />
+                    <FaGithub aria-hidden="true" />
                   </Button>
                 </div>
 

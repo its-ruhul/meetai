@@ -225,8 +225,9 @@ export const SignUpView = () => {
                     variant="outline"
                     type="button"
                     className="w-full"
+                    aria-label="Contniue with Google"
                   >
-                    <FaGoogle />
+                    <FaGoogle aria-hidden="true" />
                   </Button>
 
                   <Button
@@ -235,8 +236,9 @@ export const SignUpView = () => {
                     variant="outline"
                     type="button"
                     className="w-full"
+                    aria-label="Continue with GitHub"
                   >
-                    <FaGithub />
+                    <FaGithub aria-hidden="true" />
                   </Button>
                 </div>
 
