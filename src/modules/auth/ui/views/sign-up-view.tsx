@@ -3,17 +3,18 @@
 import { z } from "zod";
 import { OctagonAlertIcon, X } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import Link from "next/link";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { FaGoogle, FaGithub } from "react-icons/fa";
 
 import { authClient } from "@/lib/auth-client";
-import { useRouter } from "next/navigation";
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { 
+import {
   Form,
   FormControl,
   FormField,
@@ -24,40 +25,71 @@ import {
 import { Alert, AlertTitle } from "@/components/ui/alert";
 
 const formSchema = z.object({
-  email: z.email({message: "Invalied email address"}),
-  password: z.string().min(1, {message: "Password is required"}),
+  name: z.string().min(1, { message: "Name is required" }),
+  email: z.email({ message: "Invalid email address" }),
+  password: z.string().min(1, { message: "Password is required" }).min(8, { message: "Password is too short" }),
+  confirmPassword: z.string().min(1, { message: "Password is required" }),
+}).refine((data) => data.password === data.confirmPassword, {
+  message: "Passwords don't match",
+  path: ["confirmPassword"],
 });
 
-export const SignInView = () => {
+export const SignUpView = () => {
 
   const router = useRouter();
+
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
-
-  console.log("Sign in view");
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      name: "",
       email: "",
       password: "",
+      confirmPassword: "",
     }
   });
-  
+
   const onSubmit = (data: z.infer<typeof formSchema>) => {
-      
+
     setError(null);
     setPending(true);
 
-    authClient.signIn.email(
+    authClient.signUp.email(
       {
+        name: data.name,
         email: data.email,
         password: data.password,
-      }, 
+        callbackURL: "/",
+      },
       {
         onSuccess: () => {
           setPending(false);
           router.push("/");
+        },
+
+        onError: ({ error }) => {
+          setPending(false);
+          setError(error.message);
+        }
+      }
+    );
+  };
+
+  const onSocial = (provider: "github" | "google") => {
+
+    setError(null);
+    setPending(true);
+
+    authClient.signIn.social(
+      {
+        provider: provider,
+        callbackURL: "/",
+      },
+      {
+        onSuccess: () => {
+          setPending(false);
         },
 
         onError: ({ error }) => {
@@ -78,22 +110,42 @@ export const SignInView = () => {
               <div className="flex flex-col gap-6">
                 <div className="flex flex-col items-center text-center">
                   <h1 className="text-2xl font-bold">
-                    Welcome back
+                    Let&apos;s get started
                   </h1>
                   <p className="text-muted-foreground text-balance">
-                    Login to your account
+                    Create your account
                   </p>
                 </div>
 
                 <div className="grid gap-3">
-                  <FormField 
+                  <FormField
+                    control={form.control}
+                    name="name"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Name</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="text"
+                            placeholder="John Doe"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
+                <div className="grid gap-3">
+                  <FormField
                     control={form.control}
                     name="email"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Email</FormLabel>
                         <FormControl>
-                          <Input 
+                          <Input
                             type="email"
                             placeholder="username@example.com"
                             {...field}
@@ -106,14 +158,34 @@ export const SignInView = () => {
                 </div>
 
                 <div className="grid gap-3">
-                  <FormField 
+                  <FormField
                     control={form.control}
                     name="password"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Password</FormLabel>
                         <FormControl>
-                          <Input 
+                          <Input
+                            type="password"
+                            placeholder="*******"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
+                <div className="grid gap-3">
+                  <FormField
+                    control={form.control}
+                    name="confirmPassword"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Confirm Password</FormLabel>
+                        <FormControl>
+                          <Input
                             type="password"
                             placeholder="*******"
                             {...field}
@@ -137,7 +209,7 @@ export const SignInView = () => {
                   type="submit"
                   className="w-full"
                 >
-                  Sign in
+                  Sign up
                 </Button>
 
                 <div className="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">
@@ -147,27 +219,33 @@ export const SignInView = () => {
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
-                  <Button 
+                  <Button
+                    disabled={pending}
+                    onClick={() => {onSocial("google")}}
                     variant="outline"
                     type="button"
                     className="w-full"
+                    aria-label="Contniue with Google"
                   >
-                    Google
+                    <FaGoogle aria-hidden="true" />
                   </Button>
 
-                  <Button 
+                  <Button
+                    disabled={pending}
+                    onClick={() => {onSocial("github")}}
                     variant="outline"
                     type="button"
                     className="w-full"
+                    aria-label="Continue with GitHub"
                   >
-                    GitHub
+                    <FaGithub aria-hidden="true" />
                   </Button>
                 </div>
 
                 <div className="text-center text-sm">
-                  Don&apos;t have an accout?{" "}
-                  <Link href="/sign-up" className="underline underline-offset-4">
-                    Sign up
+                  Already have an accout?{" "}
+                  <Link href="/sign-in" className="underline underline-offset-4">
+                    Sign in
                   </Link>
                 </div>
               </div>
@@ -175,7 +253,7 @@ export const SignInView = () => {
           </Form>
 
           <div className="bg-radial from-green-700 to-green-900 relative hidden md:flex flex-col gap-y-4 items-center justify-center">
-            <img src="/logo.svg" alt="Image" className="h-23 w-23" />
+            <img src="/logo.svg" alt="meet.ai logo" className="h-23 w-23" />
             <p className="text-2xl font-semibold text-white">
               Meet.AI
             </p>
