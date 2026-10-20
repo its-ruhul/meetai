@@ -63,22 +63,24 @@ export const DashboardSidebar = () => {
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupContent>
-            {firstSection.map((item) => (
-              <SidebarMenuItem key={item.href}>
-                <SidebarMenuButton 
-                  render={<Link href={item.href}></Link>}
-                  isActive={pathname === item.href}
-                  className={cn(
-                    "h-10 hover:bg-linear-to-r/oklch border border-transparent hover:border-[#5D6B68]/10 from-sidebar-accent from-5% via-30% via-sidebar/50 to-sidebar/50",
-                    pathname === item.href && "bg-linear-to-r/oklch border-[#5D6B68]/10"
-                )} >
-                  <item.icon className="size-5" />
-                    <span className="text-sm font-medium tracking-tight">
-                      {item.label}
-                    </span>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            ))}
+            <SidebarMenu>
+              {firstSection.map((item) => (
+                <SidebarMenuItem key={item.href}>
+                  <SidebarMenuButton 
+                    render={<Link href={item.href}></Link>}
+                    isActive={pathname === item.href}
+                    className={cn(
+                      "h-10 hover:bg-linear-to-r/oklch border border-transparent hover:border-[#5D6B68]/10 from-sidebar-accent from-5% via-30% via-sidebar/50 to-sidebar/50",
+                      pathname === item.href && "bg-linear-to-r/oklch border-[#5D6B68]/10"
+                  )} >
+                    <item.icon className="size-5" />
+                      <span className="text-sm font-medium tracking-tight">
+                        {item.label}
+                      </span>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
 
