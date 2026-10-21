@@ -110,7 +110,7 @@ export const DashboardSidebar = () => {
         </SidebarGroup>
       </SidebarContent>
 
-      <SidebarFooter className="text-white">
+      <SidebarFooter className="text-white pb-[max(0.5rem,env(safe-area-inset-bottom))]">
           <DashboardUserButton />
       </SidebarFooter>
     </Sidebar>
