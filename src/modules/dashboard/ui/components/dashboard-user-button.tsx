@@ -44,8 +44,6 @@ export const DashboardUserButton = () => {
     return null;
   }
 
-  console.log("isMobile: ", isMobile);
-
   if (isMobile) {
     return (
       <Drawer>
