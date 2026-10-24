@@ -19,13 +19,13 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return (
-    <TRPCReactProvider>
-      <html
-        lang="en"
-      >
+  return (   
+    <html
+      lang="en"
+    >
+      <TRPCReactProvider>
         <body className={`${inter.className} | antialiased`}>{children}</body>
-      </html>
-    </TRPCReactProvider>
+      </TRPCReactProvider>
+    </html>
   );
 }
