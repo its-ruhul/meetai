@@ -32,8 +32,8 @@ export const DashboardNavbar = () => {
       <nav className="flex px-4 gap-x-2 items-center py-3 border-b bg-background">
         <Button className="size-9" variant="outline" onClick={toggleSidebar}>
           {state === "collapsed" || isMobile 
-            ? <PanelLeftIcon className="size-4" aria-lable="Open sidebar" /> 
-            : <PanelLeftCloseIcon className="size-4" aria-lable="Close sidebar" />
+            ? <PanelLeftIcon className="size-4" aria-labelledby="Open sidebar" /> 
+            : <PanelLeftCloseIcon className="size-4" aria-labelledby="Close sidebar" />
           }
         </Button>
 
